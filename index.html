@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BİLGİSDAN | Legendary Tech</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #ffcc00;
+            --gold-bright: #fff0a0;
+            --red-premium: #ff0000;
+            --bg: #000000;
+        }
+
+        * { box-sizing: border-box; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); }
+        body { 
+            background-color: var(--bg); color: #fff; 
+            font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden;
+        }
+
+        /* Efsanevi Dinamik Arka Plan */
+        #aura-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+        header { 
+            height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; position: relative;
+        }
+
+        .logo { 
+            font-size: clamp(3rem, 18vw, 10rem); font-weight: 950; color: var(--gold); 
+            letter-spacing: 30px; text-shadow: 0 0 80px var(--gold); margin: 0;
+            animation: float 4s infinite ease-in-out;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .sub-counter {
+            background: rgba(255, 255, 255, 0.03); border: 2px solid var(--gold);
+            padding: 15px 45px; border-radius: 100px; margin-top: 20px;
+            font-weight: 900; font-size: 1.5rem; color: var(--gold);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.1);
+        }
+
+        /* Tıklama İsteği Uyandıran Efsanevi Buton */
+        .btn-legendary {
+            background: linear-gradient(45deg, #ff0000, #ff4d4d, #b30000);
+            background-size: 200% 200%; color: #fff; padding: 28px 90px;
+            font-size: 2rem; font-weight: 950; border-radius: 100px;
+            text-decoration: none; margin-top: 60px; display: inline-block;
+            box-shadow: 0 15px 50px rgba(255, 0, 0, 0.5);
+            border: 3px solid rgba(255,255,255,0.2);
+            text-transform: uppercase; letter-spacing: 5px;
+            animation: gradientMove 3s infinite, pulse 2s infinite;
+        }
+        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes pulse { 0% { box-shadow: 0 0 30px #ff0000; } 50% { box-shadow: 0 0 70px #ff0000; } 100% { box-shadow: 0 0 30px #ff0000; } }
+        .btn-legendary:hover { transform: scale(1.15) rotate(-2deg); letter-spacing: 8px; }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 60px 20px; }
+
+        /* Ultra-Premium Açıklama Paneli */
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.9); border: 1px solid rgba(255, 204, 0, 0.4);
+            padding: 55px; border-radius: 60px; margin: -100px auto 80px;
+            backdrop-filter: blur(50px); box-shadow: 0 50px 150px rgba(0,0,0,1);
+        }
+
+        .tabs { display: flex; gap: 15px; justify-content: center; margin-bottom: 45px; }
+        .tab-btn { 
+            background: #151515; color: #666; border: 1px solid #333; padding: 16px 38px; 
+            border-radius: 20px; cursor: pointer; font-weight: 900;
+        }
+        .tab-btn.active { background: var(--gold); color: #000; border-color: var(--gold); box-shadow: 0 0 40px var(--gold); }
+        
+        .tab-content { display: none; line-height: 2.1; font-size: 1.3rem; }
+        .tab-content.active { display: block; animation: zoomIn 0.6s ease; }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* Video Grid - Kristal Görünüm */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
+        .card { 
+            background: #0d0d0d; border-radius: 45px; overflow: hidden; border: 1px solid #222;
+            position: relative; display: flex; flex-direction: column;
+        }
+        .card:hover { border-color: var(--gold); transform: translateY(-20px) scale(1.02); }
+        
+        .thumb { position: relative; height: 230px; overflow: hidden; }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
+        .card:hover .thumb img { filter: grayscale(0%); transform: scale(1.1); }
+        .play-overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 204, 0, 0.1); display: flex; align-items: center;
+            justify-content: center; opacity: 0; 
+        }
+        .card:hover .play-overlay { opacity: 1; }
+        .play-overlay i { font-size: 4rem; color: #fff; text-shadow: 0 0 20px #000; }
+
+        .info { padding: 35px; flex-grow: 1; }
+        .v-title { color: var(--gold); font-size: 1.45rem; font-weight: 900; margin-bottom: 25px; line-height: 1.4; height: 3em; overflow: hidden; }
+        .v-badge { 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px; border-radius: 20px; font-weight: 900; text-align: center; font-size: 0.9rem;
+        }
+
+        footer { text-align: center; padding: 120px; color: #222; font-weight: 900; letter-spacing: 20px; }
+    </style>
+</head>
+<body>
+
+    <canvas id="aura-bg"></canvas>
+
+    <header>
+        <h1 class="logo">BİLGİSDAN</h1>
+        <div class="sub-counter"><i class="fas fa-crown"></i> 35 GÜNCEL ABONE</div>
+        <a href="https://www.youtube.com/@BİLGİSTAN.com.tr.3102?sub_confirmation=1" target="_blank" class="btn-legendary">
+             ABONE OL
+        </a>
+    </header>
+
+    <div class="container">
+        <div class="glass-panel">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="tab('tr')">TÜRKÇE</button>
+                <button class="tab-btn" onclick="tab('en')">ENGLISH</button>
+                <button class="tab-btn" onclick="tab('ar')">العربية</button>
+                <button class="tab-btn" onclick="tab('es')">ESPAÑOL</button>
+            </div>
+
+            <div id="tr" class="tab-content active">
+                🚀 <b>BİLGİSDAN - Bilgisayarınızın Sınırlarını Zorlayın!</b><br><br>
+                Selamlar! Ben BİLGİSDAN. Bu kanalda, bilgisayarınızı en verimli hale getirecek gizli ayarları, internetten ek gelir elde etme yöntemlerini ve kimsenin bilmediği teknolojik ipuçlarını keşfediyoruz.<br><br>
+                <b>Kanalda Neler Bulacaksınız?</b><br>
+                ✅ <b>Windows Optimizasyonu:</b> PC'nizi uçuracak hızlandırma ve temizlik ayarları.<br>
+                ✅ <b>Gizli Özellikler:</b> Yazılım ve işletim sistemlerinin saklı kalmış menüleri.<br>
+                ✅ <b>Dijital Kazanç:</b> İnternet üzerindeki güvenilir sitelerden gelir elde etme rehberleri.<br>
+                ✅ <b>Pratik Çözümler:</b> Günlük teknoloji sorunlarını saniyeler içinde çözen yöntemler.<br><br>
+                Bilgi güçtür ve bu güç Bilgisdan’da toplanıyor. Karmaşık teknik detaylarla vakit kaybetmeden, doğrudan sonuca odaklanmak istiyorsanız doğru yerdesiniz.<br><br>
+                🎯 <b>Hemen Abone Olun, Dijital Dünyanın Kazananı Siz Olun!</b>
+            </div>
+
+            <div id="en" class="tab-content">
+                🚀 <b>BİLGİSDAN - Push the Limits of Your Computer!</b><br><br>
+                Greetings! I am BİLGİSDAN. On this channel, we explore hidden settings to make your computer more efficient, methods to earn additional income online, and technological tips known to none.<br><br>
+                <b>What You Will Find on the Channel?</b><br>
+                ✅ <b>Windows Optimization:</b> Acceleration and cleaning settings that will boost your PC.<br>
+                ✅ <b>Hidden Features:</b> Concealed menus of software and operating systems.<br>
+                ✅ <b>Digital Earnings:</b> Guides to earning income from reliable websites on the internet.<br>
+                ✅ <b>Practical Solutions:</b> Methods that solve daily tech problems in seconds.<br><br>
+                Knowledge is power and this power is gathered at Bilgisdan. If you want to focus directly on the result without wasting time on complex technical details, you are at the right place.<br><br>
+                🎯 <b>Subscribe Now, Become the Winner of the Digital World!</b>
+            </div>
+
+            <div id="ar" class="tab-content" dir="rtl">
+                🚀 <b>BİLGİSDAN - ادفع حدود جهاز الكمبيوتر الخاص بك!</b><br><br>
+                تحياتي! أنا BİLGİSDAN. في هذه القناة، نكتشف الإعدادات المخفية لجعل جهاز الكمبيوتر الخاص بك أكثر كفاءة، وطرق كسب دخل إضافي من الإنترنت، والنصائح التكنولوجية التي لا يعرفها أحد.<br><br>
+                <b>ماذا ستجد في القناة؟</b><br>
+                ✅ <b>تحسين ويندوز:</b> إعدادات التسريع والتنظيف التي ستجعل جهازك يطير.<br>
+                ✅ <b>الميزات المخفية:</b> القوائم السرية للبرامج وأنظمة التشغيل.<br>
+                ✅ <b>الأرباح الرقمية:</b> أدلة لكسب الدخل من مواقع موثوقة على الإنترنت.<br>
+                ✅ <b>حلول عملية:</b> طرق تحل مشاكل التكنولوجيا اليومية في ثوانٍ.<br><br>
+                المعرفة قوة وهذه القوة تجتمع في "Bilgisdan". إذا كنت تريد التركيز مباشرة على النتيجة دون إضاعة الوقت في التفاصيل التقنية المعقدة، فأنت في المكان الصحيح.<br><br>
+                🎯 <b>اشترك الآن، وكن الفائز في العالم الرقمي!</b>
+            </div>
+
+            <div id="es" class="tab-content">
+                🚀 <b>BİLGİSDAN - ¡Lleva tu computadora al límite!</b><br><br>
+                ¡Saludos! Soy BİLGİSDAN. En este canal, exploramos configuraciones ocultas para optimizar tu PC, métodos para obtener ingresos extra por internet y trucos tecnológicos que nadie conoce.<br><br>
+                <b>¿Qué encontrarás en el canal?</b><br>
+                ✅ <b>Optimización de Windows:</b> Ajustes de aceleración y limpieza para potenciar tu PC.<br>
+                ✅ <b>Funciones Ocultas:</b> Menús secretos de software y sistemas operativos.<br>
+                ✅ <b>Ganancia Digital:</b> Guías para obtener ingresos de sitios web confiables en internet.<br>
+                ✅ <b>Soluciones Prácticas:</b> Métodos que resuelven problemas técnicos cotidianos en segundos.<br><br>
+                El conocimiento es poder y ese poder se reúne en Bilgisdan. Si quieres centrarte directamente en el resultado sin perder tiempo en complejos detalles técnicos, estás en el lugar correcto.<br><br>
+                🎯 <b>¡Suscríbete ahora y sé el ganador del mundo digital!</b>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <a href="https://www.youtube.com/watch?v=SVmTBsXUPP8" target="_blank" class="thumb">
+                    <img src="https://img.youtube.com/vi/SVmTBsXUPP8/maxresdefault.jpg">
+                    <div class="play-overlay"><i class="fas fa-play-circle"></i></div>
+                </a>
+                <div class="info">
+                    <div class="v-title">Not Defteri ile Profesyonel Web Sitesi Yapımı (Bölüm 2)</div>
+                    <div class="v-badge">🎯 20 LİKE HEDEFİNDE YENİ BÖLÜM</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <a href="https://www.youtube.com/watch?v=jh0fGaN5TFw" target="_blank" class="thumb">
+                    <img src="https://img.youtube.com/vi/jh0fGaN5TFw/maxresdefault.jpg">
+                    <div class="play-overlay"><i class="fas fa-play-circle"></i></div>
+                </a>
+                <div class="info">
+                    <div class="v-title">Not Defteri ile Web Sitesi Yapmaya Giriş (Bölüm 1)</div>
+                    <div class="v-badge" style="color:#00ff00;">✅ HEDEF TAMAMLANDI</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <a href="https://www.youtube.com/watch?v=qaGkDpMSFP8" target="_blank" class="thumb">
+                    <img src="https://img.youtube.com/vi/qaGkDpMSFP8/maxresdefault.jpg">
+                    <div class="play-overlay"><i class="fas fa-play-circle"></i></div>
+                </a>
+                <div class="info">
+                    <div class="v-title">30 Abone Özel: BİLGİSDAN Rap Şarkısı</div>
+                    <div class="v-badge">🤝 KARŞILIKLI ABONELİK AKTİF</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <a href="https://www.youtube.com/watch?v=2FPlFxadCsc" target="_blank" class="thumb">
+                    <img src="https://img.youtube.com/vi/2FPlFxadCsc/maxresdefault.jpg">
+                    <div class="play-overlay"><i class="fas fa-play-circle"></i></div>
+                </a>
+                <div class="info">
+                    <div class="v-title">Chrome Üzerinden Hacker Şakası Yapma (F12)</div>
+                    <div class="v-badge">📝 KODLAR AÇIKLAMADA</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>BİLGİSDAN © 2026</footer>
+
+    <script>
+        function tab(id) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        const canvas = document.getElementById('aura-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let orbs = [];
+        for(let i=0; i<35; i++) {
+            orbs.push({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                radius: Math.random() * 300 + 150,
+                color: `rgba(255, 204, 0, ${Math.random() * 0.08})`,
+                vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            orbs.forEach(o => {
+                let g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.radius);
+                g.addColorStop(0, o.color); g.addColorStop(1, 'transparent');
+                ctx.fillStyle = g; ctx.beginPath(); ctx.arc(o.x, o.y, o.radius, 0, Math.PI * 2); ctx.fill();
+                o.x += o.vx; o.y += o.vy;
+                if(o.x < 0 || o.x > canvas.width) o.vx *= -1;
+                if(o.y < 0 || o.y > canvas.height) o.vy *= -1;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+</html>
